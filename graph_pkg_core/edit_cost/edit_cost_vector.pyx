@@ -2,6 +2,7 @@ import numpy as np
 cimport numpy as np
 from libc.math cimport fmin
 
+
 cdef class EditCostVector(EditCost):
 
     def __init__(self,
@@ -12,7 +13,7 @@ cdef class EditCostVector(EditCost):
                  str metric_name,
                  double alpha=-1.):
         super().__init__(c_insert_node, c_delete_node, c_insert_edge, c_delete_edge, metric_name, alpha)
-        self.metrics_available = ['euclidean']
+        self.metrics_available = ['euclidean', 'dirac', 'wierdac']
         self._init_metric()
 
     cdef int _init_metric(self) except? -1:
@@ -20,6 +21,10 @@ cdef class EditCostVector(EditCost):
 
         if self.metric_name == 'euclidean':
             self.metric = euclidean_vector
+        elif self.metric_name == "dirac":
+            self.metric = dirac_vector
+        elif self.metric_name == "wierdac":
+            self.metric = wierdac
 
     cpdef double cost_insert_node(self, Node node) except? -1:
         """
@@ -63,7 +68,10 @@ cdef class EditCostVector(EditCost):
 
         dist = self.metric(self.vec_source, self.vec_target)
 
-        return self.alpha_node * fmin(dist, 2*self.c_insert_node)
+        if self.metric_name == "dirac":
+            dist = dist * (self.c_insert_node + self.c_delete_node)
+
+        return self.alpha_node * dist
 
     cpdef double cost_insert_edge(self, Edge edge) except? -1:
         return self.c_cost_insert_edge(edge)

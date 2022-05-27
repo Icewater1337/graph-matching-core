@@ -22,6 +22,8 @@ cdef double dirac_mutagenicity(int chem_source, int chem_target):
 cdef double dirac_NCI1(int chem_source, int chem_target):
     return float(chem_source != chem_target)
 
+@cython.boundscheck(False)
+@cython.wraparound(False)
 cdef double dirac(int source, int target):
     return float(source != target)
 
@@ -37,3 +39,27 @@ cdef double euclidean_vector(double[::1] vec_src, double[::1] vec_trgt):
 
     return c_sqrt(sum_pow)
     # return np.linalg.norm(np.asarray(vec_src) - np.asarray(vec_trgt))
+
+@cython.boundscheck(False)
+@cython.wraparound(False)
+cdef double dirac_vector(double[::1] vec_src, double[::1] vec_trgt):
+    cdef:
+        int N
+        double sum = 0.
+    N = vec_src.shape[0]
+    for idx in range(N):
+        sum += np.absolute(vec_src[idx] - vec_trgt[idx])
+    return float(sum > 0)
+
+@cython.boundscheck(False)
+@cython.wraparound(False)
+cdef double wierdac(double[::1] vec_src, double[::1] vec_trgt):
+    cdef:
+        int N
+        double sum = 0.
+    N = vec_src.shape[0]
+    for idx in range(N):
+        sum += vec_src[idx] - vec_trgt[idx]
+
+    return sum
+
