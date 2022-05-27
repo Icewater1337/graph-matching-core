@@ -6,7 +6,7 @@ package contains the core files to perform graph matching.
 
 ## Install
 
-git clone https://github.com/CheshireCat12/graph-matching-core.git
+git clone [https://github.com/Icewater1337/graph-matching-core.git](https://github.com/Icewater1337/graph-matching-core.git)
 
 Create python virtual environment with python3.9
 python3.9 -m venv venv
