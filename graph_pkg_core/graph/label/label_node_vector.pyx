@@ -12,6 +12,8 @@ cdef class LabelNodeVector(LabelBase):
         Args:
             vector: ndarray
         """
+        if isinstance(vector[0],str):
+            vector[0] = int.from_bytes(vector[0].encode(), 'little')
         self.vector = vector
 
     cpdef tuple get_attributes(self):
