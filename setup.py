@@ -22,7 +22,7 @@ install_requires = [
     'gitpython',
     'easydict',
     'bunch',
-    'sklearn',
+    "scikit-learn",
     'pygad'
 ]
 
